@@ -46,8 +46,6 @@ react_typescript_fastapi/
 ├── frontend/               # Reactフロントエンド
 │   ├── src/
 │   │   ├── components/     # Reactコンポーネント
-│   │   ├── types/          # TypeScript型定義
-│   │   ├── services/       # API通信サービス
 │   │   └── App.tsx         # メインアプリケーション
 │   ├── package.json        # Node.js依存関係
 │   └── tsconfig.json       # TypeScript設定
