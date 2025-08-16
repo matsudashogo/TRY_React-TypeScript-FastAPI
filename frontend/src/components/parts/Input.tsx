@@ -1,25 +1,21 @@
-type InputProps = {
+import { useCallback } from 'react';
+
+type InputProps = Partial<HTMLInputElement> & {
     className?: string;
-    placeholder?: string;
-    value?: string;
     onChange?: (value: string) => void;
 }
 
-const Input: React.FC<InputProps> = ({
-    className = '', 
-    placeholder = '', 
-    value = '',
-    onChange,
-}) => {
+const InputText: React.FC<InputProps> = ({ onChange } ,...props) => {
+    const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+        onChange?.(e.target.value)
+    }, [onChange]);
     return (
         <input 
+            {...props}
             type="text"
-            className={className} 
-            placeholder={placeholder} 
-            value={value}
-            onChange={(e) => onChange?.(e.target.value)}
+            onChange={handleChange}
         />
     );
 }
 
-export default Input
+export default InputText;
