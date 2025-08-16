@@ -2,7 +2,7 @@ type HeaderProps = {
     title: string
 }
 
-const Hearder: React.FC<HeaderProps> = ({ title }) => {
+const Header: React.FC<HeaderProps> = ({ title }) => {
     return (
         <header className="bg-gray-800 text-white py-4">
             <h1 className="text-2xl font-bold text-center">{title}</h1>
@@ -10,4 +10,4 @@ const Hearder: React.FC<HeaderProps> = ({ title }) => {
     );
 }
 
-export default Hearder
+export default Header
