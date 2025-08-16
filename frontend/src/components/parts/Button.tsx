@@ -1,4 +1,4 @@
-interface ButtonProps {
+type ButtonProps = {
     className: string,
     text: string,
     event: () => void

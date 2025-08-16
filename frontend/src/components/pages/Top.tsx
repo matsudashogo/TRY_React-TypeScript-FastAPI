@@ -3,7 +3,7 @@ import Header from '../parts/Hearder'
 import Button from '../parts/Button'
 import Input from '../parts/Input'
 
-interface Todo {
+type Todo = {
     id: number,
     title: string,
     created_at: string,

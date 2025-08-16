@@ -1,4 +1,4 @@
-interface InputProps {
+type InputProps = {
     className?: string;
     placeholder?: string;
     value?: string;
