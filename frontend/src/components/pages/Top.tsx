@@ -8,20 +8,23 @@ interface Todo {
     title: string,
     created_at: string,
     updated_at: string,
+    is_edit: boolean,
 }
 
 const todoList: Todo[] = [
     {
         id: 1,
         title: 'タスク1',
-        created_at: '2021-01-01',
-        updated_at: '2021-01-01',
+        created_at: '2021-01-01 00:00:00',
+        updated_at: '2021-01-01 00:00:00',
+        is_edit: false,
     },
     {
         id: 2,
         title: 'タスク2',
-        created_at: '2021-01-01',
-        updated_at: '2021-01-01',
+        created_at: '2021-01-01 00:00:00',
+        updated_at: '2021-01-01 00:00:00',
+        is_edit: false,
     }
 ]
 
@@ -33,12 +36,40 @@ const Top: React.FC = () => {
         const newTodo = {
             id: todos.length + 1,
             title: inputValue,
-            created_at: new Date().toISOString().split('T')[0],
-            updated_at: new Date().toISOString().split('T')[0],
+            created_at: new Date().toISOString().slice(0, 19).replace('T', ' '),
+            updated_at: new Date().toISOString().slice(0, 19).replace('T', ' '),
+            is_edit: false,
         }
 
         setTodos([...todos, newTodo]);
-        setInputValue(''); // 入力フィールドをクリア
+        setInputValue('');
+    }
+
+    const editTodo = (id: number, newTitle: string) => {
+        const newTodos = todos.map((todo) => {
+            if (todo.id === id) {
+                return { ...todo, title: newTitle, updated_at: new Date().toISOString().slice(0, 19).replace('T', ' ') }
+            }
+            return todo
+        })
+        setTodos(newTodos)
+    }
+
+    const toggleEdit = (id: number) => {
+        const newTodos = todos.map((todo) => {
+            if (todo.id === id) {
+                return { ...todo, is_edit: !todo.is_edit }
+            }
+            return todo
+        })
+        setTodos(newTodos)
+    }
+
+    const deleteTodo = (id: number) => {
+        if (confirm('削除しますか？')) {
+            const newTodos = todos.filter((todo) => todo.id !== id)
+            setTodos(newTodos)
+        }
     }
 
     return (
@@ -74,19 +105,29 @@ const Top: React.FC = () => {
                     {todos.map((todo) => (
                         <tr key={todo.id} className="hover:bg-gray-50 transition">
                             <td className="px-6 py-4 text-gray-800">{todo.id}</td>
-                            <td className="px-6 py-4 font-medium text-gray-900">{todo.title}</td>
+                            <td className="px-6 py-4 font-medium text-gray-900">
+                                {todo.is_edit ? (
+                                    <Input
+                                        value={todo.title}
+                                        className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-400"
+                                        onChange={(value) => editTodo(todo.id, value)}
+                                    />
+                                ) : (
+                                    todo.title
+                                )}
+                            </td>
                             <td className="px-6 py-4 text-gray-600">{todo.created_at}</td>
                             <td className="px-6 py-4 text-gray-600">{todo.updated_at}</td>
                             <td className="px-6 py-4 text-center space-x-2">
                                 <Button
                                     className="px-3 py-1 text-sm bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
-                                    text="編集"
-                                    event={() => { alert('編集') }}
+                                    text={todo.is_edit ? '保存' : '編集'}
+                                    event={() => toggleEdit(todo.id)}
                                 />
                                 <Button
                                     className="px-3 py-1 text-sm bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
                                     text="削除"
-                                    event={() => { alert('削除') }}
+                                    event={() => deleteTodo(todo.id)}
                                 />
                             </td>
                         </tr>
