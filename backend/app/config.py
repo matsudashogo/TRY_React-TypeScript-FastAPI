@@ -1,53 +1,42 @@
-# DB操作用にsqlalchemyライブラリインポート
 from sqlalchemy import create_engine
-# DBの存在確認とDB作成を行うためにインポート
-from sqlalchemy_utils import database_exists, create_database
-# セッション定義用にインポート
 from sqlalchemy.orm import sessionmaker, scoped_session
+from sqlalchemy.ext.declarative import declarative_base
 
-# モデル定義ファイルインポート
-from db_model import Base
+# データベース接続情報
+DB_USER = "root"
+DB_PASSWORD = "rootpass"
+DB_HOST = "localhost"
+DB_PORT = "3306"
+DB_NAME = "todo"
 
-# 接続したいDBへの接続情報
-user_name = 'appuser'
-password = 'apppass'
-host = "localhost"
-database_name = "todo"
+# データベースURL
+DATABASE_URL = f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}?charset=utf8mb4"
 
-# バインディング
-DATABASE = 'mysql://%s:%s@%s/%s?charset=utf8' % (
-    user_name,
-    password,
-    host,
-    database_name,
+# エンジン作成
+engine = create_engine(
+    DATABASE_URL,
+    echo=True,  # SQLクエリをログ出力
+    pool_pre_ping=True,  # 接続の有効性を確認
+    pool_recycle=3600,  # 接続プールのリサイクル時間（秒）
 )
 
-# DBとの接続
-ENGINE = create_engine(
-    DATABASE,
-    # 文字コード指定
-    encoding="utf-8",
-    #自動生成されたSQLを吐き出すようにする
-    echo=True
-)
+# セッションファクトリー作成
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-# session変数にsessionmakerインスタンスを格納
-session = scoped_session(
-    # ORマッパーの設定。自動コミットと自動反映はオフにする
-    sessionmaker(
-        autocommit=False,
-        autoflush=False,
-        bind=ENGINE
-    )
-)
+# スコープ付きセッション作成
+db_session = scoped_session(SessionLocal)
 
-# DBが存在しなければ
-if not database_exists(ENGINE.url):
-    # DBを新規作成する
-    create_database(ENGINE.url)
+# Baseクラス作成
+Base = declarative_base()
+Base.query = db_session.query_property()
 
-# 定義されているテーブルを一括作成
-Base.metadata.create_all(bind=ENGINE)
-
-# DB接続用のセッションクラス、インスタンスが作成されると接続する
-Base.query = session.query_property()
+# データベース接続テスト用関数
+def test_connection():
+    try:
+        with engine.connect() as connection:
+            result = connection.execute("SELECT 1")
+            print("データベース接続成功！")
+            return True
+    except Exception as e:
+        print(f"データベース接続エラー: {e}")
+        return False
