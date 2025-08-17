@@ -6,7 +6,7 @@ type InputProps = {
     onChange?: (value: string) => void;
 } & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange'>;
 
-const InputText: React.FC<InputProps> = ({ value, onChange, ...rest }) => {
+const InputText: React.FC<InputProps> = ({ value, className, onChange, ...rest }) => {
     const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         onChange?.(e.target.value)
     }, [onChange]);
@@ -14,6 +14,7 @@ const InputText: React.FC<InputProps> = ({ value, onChange, ...rest }) => {
         <input
             {...rest}
             value={value}
+            className={className}
             type="text"
             onChange={handleChange}
         />
