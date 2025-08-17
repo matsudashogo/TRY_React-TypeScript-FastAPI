@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import Header from '../parts/Hearder'
+import Header from '../parts/Header'
 import Button from '../parts/Button'
 import Input from '../parts/Input'
 

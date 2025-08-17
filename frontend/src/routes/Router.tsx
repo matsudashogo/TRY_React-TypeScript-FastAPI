@@ -1,7 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Top from '../components/pages/Top'
 
-const AppRoutes = () => {
+const Router = () => {
     return (
         <BrowserRouter>
             <Routes>
@@ -11,4 +11,4 @@ const AppRoutes = () => {
     );
 }
 
-export default AppRoutes
+export default Router
