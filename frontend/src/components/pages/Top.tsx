@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import Header from '../parts/Header'
 import Button from '../parts/Button'
 import InputText from '../parts/InputText'
@@ -72,6 +72,10 @@ const Top: React.FC = () => {
         }
     }
 
+    const handleChange = useCallback((value: string) => {
+        setInputValue(value);
+    }, []);
+
     return (
         <>
             <Header title="TODO一覧" />
@@ -81,7 +85,7 @@ const Top: React.FC = () => {
                         placeholder="新しいタスクを入力してください"
                         className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-400"
                         value={inputValue}
-                        onChange={setInputValue}
+                        onChange={(e) => handleChange(e.target.value)}
                     />
                     <Button
                         text="追加"
@@ -110,7 +114,7 @@ const Top: React.FC = () => {
                                     <InputText
                                         value={todo.title}
                                         className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-400"
-                                        onChange={(value) => editTodo(todo.id, value)}
+                                        onChange={(e) => editTodo(todo.id, e.target.value)}
                                     />
                                 ) : (
                                     todo.title
